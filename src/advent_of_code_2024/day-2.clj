@@ -34,3 +34,18 @@
   (->> (parse-data name)
        (filter #(safe-levels %1))
        (count)))
+
+(defn generate-possible-levels
+  [initial-level]
+  (->> (map (fn [position]
+              (let [[first-half [a & second-half]] (split-at position initial-level)]
+                (concat first-half second-half)))
+            (range (count initial-level)))
+       (filter #(safe-levels %1))))
+
+(defn part-2
+  [name]
+  (->> (parse-data name)
+       (map generate-possible-levels)
+       (filter #(not (empty? %1)))
+       count))
